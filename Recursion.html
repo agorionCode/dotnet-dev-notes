@@ -2,168 +2,115 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Recursion – C# Cheat Sheet</title>
+    <title>Recursion – C# dev-docs</title>
     <link rel="stylesheet" href="stylesheet.css">
 </head>
-<body style="display: flex; flex-direction: column;">
+<body>
 
 <!-- Navigation -->
 <div class="nav">
     <a class="nav_element" href="index.html">C#</a>
-    <a class="nav_element" href="EntityFramework.html">Entity Framework</a>
-    <a class="nav_element" href="Blazor.html">Blazor</a>
-    <a class="nav_element" href="SQL.html">SQL</a>
     <a class="nav_element" href="Recursion.html" style="font-weight: bold;">Recursion</a>
 </div>
 
 <!-- Header -->
 <div class="content_box">
-    <h1>C# Recursion – dev-docs</h1>
-    <p>Examples of recursive functions in C#: directory traversal, binary trees, and console file search.</p>
-    <p>
-        <a href="https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/recursion" target="_blank">
-            → Official Recursion Documentation
-        </a>
-    </p>
+    <h1>Recursion in C# – Theory & Practice</h1>
+    <p>Study backup for exams – understand recursion with real examples.</p>
 </div>
 
-<!-- Section: What is Recursion -->
+<!-- Theory -->
 <div class="content_box">
     <h2>What is Recursion?</h2>
-    <p>Recursion is when a method calls itself to solve a smaller part of a problem. Make sure to define a base case to avoid infinite loops.</p>
-    <pre><code>void Recurse(int count)
-{
-    if (count == 0)
-        return;
+    <p>Recursion means that a method calls itself to solve a smaller part of a problem.</p>
 
-    Console.WriteLine(count);
-    Recurse(count - 1); // Recursive call
+    <h3>Key Concepts:</h3>
+    <ul>
+        <li><strong>Base case</strong> – the stopping condition (prevents infinite loop)</li>
+        <li><strong>Recursive case</strong> – where the method calls itself with smaller input</li>
+    </ul>
+
+    <h3>Structure Example:</h3>
+    <pre><code>void Recurse(int x)
+{
+    if (x == 0) return;     // Base case
+    Recurse(x - 1);         // Recursive call
+}</code></pre>
+
+    <h3>Advantages:</h3>
+    <ul>
+        <li>Cleaner, more readable code for tree or nested data</li>
+        <li>Matches natural structure of directory trees, graphs, etc.</li>
+    </ul>
+
+    <h3>Disadvantages:</h3>
+    <ul>
+        <li>Can cause stack overflow if base case is missing</li>
+        <li>Less efficient for large data (memory use)</li>
+    </ul>
+</div>
+
+<!-- Example 1: Recursive File Scan -->
+<div class="content_box">
+    <h2>Example 1 – Recursive File Scanner</h2>
+    <p>Recursively collects all files from a directory and its subdirectories.</p>
+    <pre><code>List&lt;FileEntry&gt; Scan(string path)
+{
+    var list = new List&lt;FileEntry&gt;();
+
+    foreach (var file in Directory.GetFiles(path))
+        list.Add(new FileEntry { FullPath = file });
+
+    foreach (var dir in Directory.GetDirectories(path))
+        list.AddRange(Scan(dir)); // Recursive call
+
+    return list;
 }</code></pre>
 </div>
 
-<!-- Section: Recursive File Search -->
+<!-- Example 2: Tree Builder -->
 <div class="content_box">
-    <h2>Example 1 – Recursive File Search (Basic)</h2>
-    <p>Scan a directory and its subdirectories for all files.</p>
-    <pre><code>using System;
-using System.IO;
-
-void ScanDirectory(string path)
+    <h2>Example 2 – Build a Directory Tree</h2>
+    <p>Convert flat path strings into a nested tree structure.</p>
+    <pre><code>TreeNode Build(List&lt;string&gt; paths)
 {
-    try
-    {
-        foreach (string file in Directory.GetFiles(path))
-        {
-            Console.WriteLine(file);
-        }
+    var root = new TreeNode { Name = "ROOT" };
 
-        foreach (string dir in Directory.GetDirectories(path))
+    foreach (var p in paths)
+    {
+        var parts = p.Split('\\');
+        var curr = root;
+
+        foreach (var part in parts)
         {
-            ScanDirectory(dir); // Recursive call
+            var next = curr.Children.FirstOrDefault(c =&gt; c.Name == part);
+            if (next == null)
+                curr.Children.Add(next = new TreeNode { Name = part });
+
+            curr = next;
         }
     }
-    catch (UnauthorizedAccessException)
-    {
-        Console.WriteLine($"Access denied: {path}");
-    }
-}
 
-// Usage
-ScanDirectory("C:\\MyFolder");</code></pre>
-</div>
-
-<!-- Section: Console File Search -->
-<div class="content_box">
-    <h2>Example 2 – Recursive File Search (Console App)</h2>
-    <p>Command-line program that searches all files in a directory (optional: filter by extension).</p>
-    <pre><code>using System;
-using System.IO;
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        if (args.Length == 0)
-        {
-            Console.WriteLine("Usage: FileSearch &lt;path&gt; [&lt;extension&gt;]");
-            return;
-        }
-
-        string path = args[0];
-        string? ext = args.Length &gt; 1 ? args[1] : null;
-
-        Search(path, ext);
-    }
-
-    static void Search(string path, string? extension)
-    {
-        try
-        {
-            foreach (var file in Directory.GetFiles(path))
-            {
-                if (extension == null || file.EndsWith(extension, StringComparison.OrdinalIgnoreCase))
-                {
-                    Console.WriteLine(file);
-                }
-            }
-
-            foreach (var dir in Directory.GetDirectories(path))
-            {
-                Search(dir, extension);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
+    return root;
 }</code></pre>
 </div>
 
-<!-- Section: Binary Tree Traversal -->
+<!-- Example 3: Print Tree Recursively -->
 <div class="content_box">
-    <h2>Example 3 – Binary Tree In-Order Traversal</h2>
-    <p>Recursively visit each node in a binary tree (left → root → right).</p>
-    <pre><code>public class TreeNode
+    <h2>Example 3 – Print Tree Recursively</h2>
+    <p>Recursively prints a directory tree with indentation.</p>
+    <pre><code>void Print(TreeNode node, string indent = "")
 {
-    public int Value;
-    public TreeNode? Left;
-    public TreeNode? Right;
+    Console.WriteLine(indent + node.Name);
 
-    public TreeNode(int value)
-    {
-        Value = value;
-    }
-}
-
-void TraverseInOrder(TreeNode? node)
-{
-    if (node == null) return;
-
-    TraverseInOrder(node.Left);
-    Console.WriteLine(node.Value);
-    TraverseInOrder(node.Right);
-}
-
-// Example usage
-var root = new TreeNode(10)
-{
-    Left = new TreeNode(5),
-    Right = new TreeNode(20)
-};
-
-TraverseInOrder(root);</code></pre>
-
-    <p>
-        <a href="https://learn.microsoft.com/en-us/dotnet/standard/collections/common-collections" target="_blank">
-            → Tree Structures and Collections
-        </a>
-    </p>
+    foreach (var child in node.Children)
+        Print(child, indent + "  "); // Recursive call
+}</code></pre>
 </div>
 
 <!-- Footer -->
-<footer style="margin-top: 5em; padding: 1em; text-align: center; font-size: 0.9em; color: #666;">
-    <p>This material is intended for learning purposes only and may contain inaccuracies or omissions.</p>
+<footer style="margin-top: 4em; text-align: center; font-size: 0.9em; color: #666;">
+    <p>This summary is designed for study purposes – clear, compact and practical.</p>
 </footer>
 
 </body>
