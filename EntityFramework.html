@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Entity Framework Cheat Sheet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="stylesheet.css">
+    <title>C# dev-notes</title>
 </head>
 <body style="display: flex; flex-direction: column;">
 
@@ -17,35 +18,45 @@
 </div>
 
 <!-- Header -->
-<div class="content_box">
-    <h1>Entity Framework Core – dev-docs</h1>
-    <p>Example: Blog system with <code>Post</code> entity, service layer, seeding, many-to-many tagging, and database view.</p>
-    <p>
-        <a href="https://learn.microsoft.com/en-us/ef/core/" target="_blank">
-            → Official Entity Framework Core Documentation
-        </a>
-    </p>
+<div class="content">
+    <div class="jumbotron">
+        <h1 class="headline">EntityFramework - dev-docs</h1>
+        <div>
+            Welcome to the C# Cheat Sheet<br>
+            Helpful .NET summaries and practical examples.<br>
+            <a href="https://learn.microsoft.com/en-us/dotnet/csharp/" target="_blank">→ Official C# Documentation</a>
+        </div>
+    </div>
 </div>
 
-<!-- Model Example -->
+<!-- EF Core Full Example with Relations -->
 <div class="content_box" style="margin-top: 3em;">
-    <h2>Post + Tag + PostTag (Many-to-Many)</h2>
-    <p>Post and Tag entities joined with PostTag, using a defined key and DeleteBehavior.Restrict.</p>
+    <h2>EF Core – CRUD + One-to-Many + Many-to-Many + Seeding</h2>
+
+    <h3>Models with Data Annotations</h3>
     <pre><code>public class Post
 {
     [Key]
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(200)]
-    public string Title { get; set; } = string.Empty;
+    [MinLength(5)]
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(max)")]
+    public string Title { get; set; } = string.Empty; { get; set; } = string.Empty;
 
     [Required]
+    [DataType(DataType.MultilineText)]
     public string Content { get; set; } = string.Empty;
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    [Required]
+    public string AuthorId { get; set; } = string.Empty;
 
-    public ICollection<PostTag> PostTags { get; set; } = new List<PostTag>();
+    [ForeignKey("AuthorId")]
+    public AppUser Author { get; set; } = null!;
+
+    public List<Comment> Comments { get; set; } = new();
+    public List<PostTag> PostTags { get; set; } = new();
 }
 
 public class Tag
@@ -54,33 +65,62 @@ public class Tag
     public int Id { get; set; }
 
     [Required]
-    public string Name { get; set; } = string.Empty;
+    [MinLength(2)]
+    [MaxLength(100)]
+    [Column(TypeName = "nvarchar(100)")]
+    public string Name { get; set; } = string.Empty; { get; set; } = string.Empty;
 
-    public ICollection<PostTag> PostTags { get; set; } = new List<PostTag>();
+    public List<PostTag> PostTags { get; set; } = new();
 }
 
 public class PostTag
 {
     [Key]
-    public int Id { get; set; }
-
+    [Column(Order = 0)]
     public int PostId { get; set; }
+
+    [ForeignKey("PostId")]
     public Post Post { get; set; } = null!;
 
+    [Key]
+    [Column(Order = 1)]
     public int TagId { get; set; }
-    public Tag Tag { get; set; } = null!;
-}</code></pre>
-</div>
 
-<!-- DbContext -->
-<div class="content_box">
-    <h3>ApplicationDbContext with Seeder and View</h3>
+    [ForeignKey("TagId")]
+    public Tag Tag { get; set; } = null!;
+}
+
+public class Comment
+{
+    [Key]
+    public int Id { get; set; }
+
+    [Required]
+    [MinLength(2)]
+    [MaxLength(500)]
+    [Column(TypeName = "nvarchar(500)")]
+    public string Text { get; set; } = string.Empty; { get; set; } = string.Empty;
+
+    [Required]
+    public int PostId { get; set; }
+
+    [ForeignKey("PostId")]
+    public Post Post { get; set; } = null!;
+
+    [Required]
+    public string AuthorId { get; set; } = string.Empty;
+
+    [ForeignKey("AuthorId")]
+    public AppUser Author { get; set; } = null!;
+}</code></pre>
+
+    <h3>DbContext with Composite Key + Seeding</h3>
     <pre><code>public class ApplicationDbContext : DbContext
 {
-    public DbSet<Post> Posts { get; set; }
-    public DbSet<Tag> Tags { get; set; }
-    public DbSet<PostTag> PostTags { get; set; }
-    public DbSet<PostStatsView> PostStatsViews { get; set; }
+    public DbSet<Post> Posts => Set<Post>();
+    public DbSet<Tag> Tags => Set<Tag>();
+    public DbSet<PostTag> PostTags => Set<PostTag>();
+    public DbSet<Comment> Comments => Set<Comment>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
 
@@ -88,18 +128,7 @@ public class PostTag
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<Post>().HasData(
-            new Post { Id = 1, Title = "Hello World", Content = "This is my first post!", CreatedAt = DateTime.UtcNow }
-        );
-
-        builder.Entity<Tag>().HasData(
-            new Tag { Id = 1, Name = "C#" },
-            new Tag { Id = 2, Name = "EF Core" }
-        );
-
-        builder.Entity<PostStatsView>()
-               .HasNoKey()
-               .ToView("PostStats");
+        builder.Entity<PostTag>().HasKey(pt => new { pt.PostId, pt.TagId });
 
         builder.Entity<PostTag>()
             .HasOne(pt => pt.Post)
@@ -112,26 +141,75 @@ public class PostTag
             .WithMany(t => t.PostTags)
             .HasForeignKey(pt => pt.TagId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Post>().HasData(new Post
+        {
+            Id = 1,
+            Title = "Seeded Post",
+            Content = "Initial content",
+            AuthorId = "seed-user-id",
+        });
+
+        builder.Entity<Tag>().HasData(
+            new Tag { Id = 1, Name = "C#" },
+            new Tag { Id = 2, Name = "EF Core" });
+
+        builder.Entity<PostTag>().HasData(
+            new PostTag { PostId = 1, TagId = 1 },
+            new PostTag { PostId = 1, TagId = 2 });
     }
 }</code></pre>
-</div>
 
-<!-- View Model -->
-<div class="content_box">
-    <h3>PostStatsView – Database View</h3>
-    <pre><code>public class PostStatsView
+    <h3>PostService</h3>
+    <pre><code>public class PostService
 {
-    public int TotalPosts { get; set; }
-    public DateTime LatestPost { get; set; }
-}</code></pre>
-</div>
+    private readonly ApplicationDbContext _context;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-<!-- Program.cs -->
-<div class="content_box">
-    <h3>Program.cs – Register Context & Service</h3>
-    <pre><code>builder.Services.AddDbContext&lt;ApplicationDbContext&gt;(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-</code></pre>
+    public PostService(ApplicationDbContext context, IHttpContextAccessor accessor)
+    {
+        _context = context;
+        _httpContextAccessor = accessor;
+    }
+
+    private string? UserId =>
+        _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    public async Task<List<Post>> GetAllAsync() =>
+        await _context.Posts
+            .Include(p => p.Comments)
+            .Include(p => p.PostTags).ThenInclude(pt => pt.Tag)
+            .ToListAsync();
+
+    public async Task<Post?> GetByIdAsync(int id) =>
+        await _context.Posts
+            .Include(p => p.Comments)
+            .Include(p => p.PostTags).ThenInclude(pt => pt.Tag)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+    public async Task CreateAsync(Post post, List<int> tagIds)
+    {
+        post.AuthorId = UserId ?? string.Empty;
+        _context.Posts.Add(post);
+        await _context.SaveChangesAsync();
+
+        foreach (var tagId in tagIds)
+        {
+            _context.PostTags.Add(new PostTag { PostId = post.Id, TagId = tagId });
+        }
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var post = await _context.Posts.FindAsync(id);
+        if (post == null || post.AuthorId != UserId) return false;
+        _context.Posts.Remove(post);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+}</code></pre>
+    <p>Ensure <code>builder.Services.AddHttpContextAccessor();</code> is configured in <code>Program.cs</code>.</p>
 </div>
 
 <!-- Footer -->
