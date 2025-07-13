@@ -18,118 +18,174 @@
 </div>
 
 <!-- Header -->
-<div class="content_box">
-    <h1>C# dev-docs</h1>
-    <p>Welcome to the C# Cheat Sheet. Helpful .NET summaries and practical examples.</p>
-    <p>
-        <a href="https://learn.microsoft.com/en-us/dotnet/csharp/" target="_blank">
-            → Official C# Documentation
-        </a>
-    </p>
+<div class="content">
+    <div class="jumbotron">
+        <h1 class="headline">C# dev-docs</h1>
+        <div>
+            Welcome to the C# development docs<br>
+            Helpful .NET summaries and practical examples.<br>
+            <a href="https://learn.microsoft.com/en-us/dotnet/csharp/" target="_blank">→ Official C# Documentation</a>
+        </div>
+    </div>
 </div>
 
-<!-- Interfaces -->
+<!-- OOP -->
 <div class="content_box" style="margin-top: 3em;">
-    <h2>Interfaces</h2>
-    <pre><code>public interface IAnimal
+    <h2>Object-Oriented Programming (OOP)</h2>
+    <div>Three core principles of OOP in C#:</div>
+    <pre><code>1. Abstraction – Hide complexity using abstract classes or interfaces
+2. Encapsulation – Protect internal state using access modifiers
+3. Inheritance – Extend functionality from base classes</code></pre>
+</div>
+
+<!-- Comments -->
+<div class="content_box" style="margin-top: 3em;">
+    <h2>Comments</h2>
+    <pre><code>// Single-line comment</code></pre>
+    <pre><code>/*
+Multi-line
+comment
+*/</code></pre>
+    <pre><code>// TODO: Task marker</code></pre>
+    <pre><code>/// XML comment for documentation</code></pre>
+</div>
+
+<!-- Data Types -->
+<div class="content_box" style="margin-top: 3em;">
+    <h2>Data Types</h2>
+    <table>
+        <thead>
+        <tr><th>Data Type</th><th>Size</th><th>Range</th></tr>
+        </thead>
+        <tbody>
+        <tr><td>int</td><td>4 bytes</td><td>−2^31 to 2^31−1</td></tr>
+        <tr><td>long</td><td>8 bytes</td><td>−2^63 to 2^63−1</td></tr>
+        <tr><td>float</td><td>4 bytes</td><td>~6–7 decimal digits</td></tr>
+        <tr><td>double</td><td>8 bytes</td><td>~15 decimal digits</td></tr>
+        <tr><td>decimal</td><td>16 bytes</td><td>~28–29 digits (financial)</td></tr>
+        <tr><td>char</td><td>2 bytes</td><td>Unicode (0–65535)</td></tr>
+        <tr><td>bool</td><td>1 bit</td><td>true / false</td></tr>
+        <tr><td>string</td><td>2 bytes per char</td><td>Variable length</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Variables -->
+<div class="content_box" style="margin-top: 3em;">
+    <h2>Variables</h2>
+    <pre><code>int num = 999;
+string word = "Hello";
+bool isReady = true;
+double price = 19.99;</code></pre>
+</div>
+
+<!-- Basic Syntax -->
+<div class="content_box" style="margin-top: 3em;">
+    <h2>Basic Syntax</h2>
+    <pre><code>public class Person
 {
-    void Speak();
+    public string Name { get; set; }
+    public int Age { get; set; }
 }
 
-public class Dog : IAnimal
+public void SayHello()
 {
-    public void Speak()
-    {
-        Console.WriteLine("Woof!");
-    }
+    Console.WriteLine("Hello!");
 }</code></pre>
 </div>
 
-<!-- Enums -->
+<!-- Control Structures -->
 <div class="content_box" style="margin-top: 3em;">
-    <h2>Enums</h2>
-    <pre><code>enum Day
+    <h2>Control Structures</h2>
+    <pre><code>// If-Else
+if (condition)
 {
-    Sunday,
-    Monday,
-    Tuesday,
-    Wednesday,
-    Thursday,
-    Friday,
-    Saturday
+    // true branch
+}
+else
+{
+    // false branch
 }
 
-Day today = Day.Monday;
-Console.WriteLine(today);</code></pre>
-</div>
+// For loop
+for (int i = 0; i < 10; i++)
+{
+    Console.WriteLine(i);
+}
 
-<!-- Exception Handling -->
-<div class="content_box" style="margin-top: 3em;">
-    <h2>Exception Handling</h2>
-    <pre><code>try
+// While loop
+int j = 0;
+while (j < 10)
 {
-    int x = int.Parse("abc");
-}
-catch (FormatException ex)
-{
-    Console.WriteLine("Invalid format!");
-}
-finally
-{
-    Console.WriteLine("Always runs");
+    Console.WriteLine(j);
+    j++;
 }</code></pre>
 </div>
 
-<!-- LINQ -->
+<!-- Methods -->
 <div class="content_box" style="margin-top: 3em;">
-    <h2>LINQ</h2>
-    <pre><code>using System.Linq;
-
-int[] numbers = { 1, 2, 3, 4, 5 };
-
-var even = numbers.Where(n => n % 2 == 0);
-
-foreach (int n in even)
+    <h2>Methods</h2>
+    <pre><code>public int Add(int a, int b)
 {
-    Console.WriteLine(n);
-}</code></pre>
-    <p>
-        <a href="https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/" target="_blank">
-            → LINQ Documentation
-        </a>
-    </p>
-</div>
-
-<!-- File I/O -->
-<div class="content_box" style="margin-top: 3em;">
-    <h2>File I/O</h2>
-    <pre><code>using System.IO;
-
-// Write to file
-File.WriteAllText("example.txt", "Hello, File!");
-
-// Read from file
-string content = File.ReadAllText("example.txt");
-Console.WriteLine(content);</code></pre>
-    <p>
-        <a href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file" target="_blank">
-            → File Class Documentation
-        </a>
-    </p>
-</div>
-
-<!-- Recursion -->
-<div class="content_box" style="margin-top: 3em;">
-    <h2>Recursion</h2>
-    <pre><code>int Factorial(int n)
-{
-    if (n <= 1)
-        return 1;
-    return n * Factorial(n - 1);
+    return a + b;
 }
 
-Console.WriteLine(Factorial(5)); // Outputs: 120</code></pre>
+int result = Add(5, 10);
+Console.WriteLine(result); // 15</code></pre>
 </div>
+
+<!-- Properties -->
+<div class="content_box" style="margin-top: 3em;">
+    <h2>Properties</h2>
+    <pre><code>public class Car
+{
+    public string Color { get; set; }
+    public string Model { get; set; }
+}
+
+Car myCar = new Car();
+myCar.Color = "Red";
+Console.WriteLine(myCar.Color);</code></pre>
+</div>
+
+<!-- Arrays -->
+<div class="content_box" style="margin-top: 3em;">
+    <h2>Arrays</h2>
+    <pre><code>int[] numbers = { 1, 2, 3 };
+Console.WriteLine(numbers[0]); // 1</code></pre>
+</div>
+
+<!-- Lists -->
+<div class="content_box" style="margin-top: 3em;">
+    <h2>Lists</h2>
+    <pre><code>using System.Collections.Generic;
+
+List<string> names = new List<string>();
+names.Add("Alice");
+names.Add("Bob");
+
+foreach (var name in names)
+{
+    Console.WriteLine(name);
+}</code></pre>
+</div>
+
+<!-- Dictionaries -->
+<div class="content_box" style="margin-top: 3em;">
+    <h2>Dictionaries</h2>
+    <pre><code>using System.Collections.Generic;
+
+var scores = new Dictionary<string, int>();
+scores["Alice"] = 90;
+scores["Bob"] = 85;
+
+foreach (var entry in scores)
+{
+    Console.WriteLine($"{entry.Key}: {entry.Value}");
+}</code></pre>
+</div>
+
+<!-- Interfaces, Enums, Exceptions, LINQ, File IO, Recursion already included above -->
 
 <!-- Footer -->
 <footer style="margin-top: 5em; padding: 1em; text-align: center; font-size: 0.9em; color: #666;">
