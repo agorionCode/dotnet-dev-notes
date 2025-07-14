@@ -18,12 +18,12 @@
 
 <!-- Header -->
 <div class="content_box">
-        <h1>EntityFramework - dev-docs</h1>
-        <p>
-            Welcome to the C# development docs<br>
-            Helpful .NET summaries and practical examples.<br>
-            <a href="https://learn.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli" target="_blank">→ Official C# EntityFramework Documentation</a>
-        </p>
+    <h1>EntityFramework - dev-docs</h1>
+    <p>
+        Welcome to the C# development docs<br>
+        Helpful .NET summaries and practical examples.<br>
+        <a href="https://learn.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli" target="_blank">→ Official C# EntityFramework Documentation</a>
+    </p>
 </div>
 
 <!-- EF Core Full Example with Relations -->
@@ -207,7 +207,25 @@ public class Comment
     }
 }</code></pre>
     <p>Ensure <code>builder.Services.AddHttpContextAccessor();</code> is configured in <code>Program.cs</code>.</p>
+
+
+
+    <h3>Accessing Authenticated User on Page Load</h3>
+    <pre><code>@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@code {
+    private string? UserId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        this.UserId = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    }
+}</code></pre>
 </div>
+
+
 
 <!-- Footer -->
 <footer style="margin-top: 5em; padding: 1em; text-align: center; font-size: 0.9em; color: #666;">
