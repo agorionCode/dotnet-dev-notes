@@ -40,6 +40,7 @@
     [MinLength(5)]
     [MaxLength(255)]
     [Column(TypeName = "nvarchar(max)")]
+    [Index(nameof(Title), IsUnique = true)] -> For Emails: [UniqueEmail]
     public string Title { get; set; } = string.Empty; { get; set; } = string.Empty;
 
     [Required]
