@@ -30,7 +30,7 @@
 <!-- Render Mode -->
 <div class="content_box">
     <h2>Render Mode</h2>
-    <pre><code>&lt;component type="typeof(App)" render-mode="InteractiveServer" /&gt;</code></pre>
+    <pre><code>&lt;component type=&quot;typeof(App)&quot; render-mode=&quot;InteractiveServer&quot; /&gt;</code></pre>
     <p>Use in <code>_Host.cshtml</code> for Blazor Server. Enables SignalR-based interaction.</p>
 </div>
 
@@ -61,7 +61,7 @@
 <!-- Data Binding -->
 <div class="content_box">
     <h2>Two-Way Data Binding</h2>
-    <pre><code>&lt;input @bind="username" /&gt;
+    <pre><code>&lt;input @bind=&quot;username&quot; /&gt;
 
 @code {
     private string username = string.Empty;
@@ -71,22 +71,22 @@
 <!-- Events: oninput and onchange -->
 <div class="content_box">
     <h2>Input Events: @oninput and @onchange</h2>
-    <pre><code>&lt;input @oninput="HandleInput" placeholder="Type something..." /&gt;
-&lt;input @onchange="HandleChange" placeholder="Change triggers on blur" /&gt;
+    <pre><code>&lt;input @oninput=&quot;HandleInput&quot; placeholder=&quot;Type something...&quot; /&gt;
+&lt;input @onchange=&quot;HandleChange&quot; placeholder=&quot;Change triggers on blur&quot; /&gt;
 
 @code {
-    private string currentValue = "";
+    private string currentValue = &quot;&quot;;
 
     private void HandleInput(ChangeEventArgs e)
     {
         var value = e.Value?.ToString();
-        currentValue = value ?? "";
+        currentValue = value ?? &quot;&quot;;
     }
 
     private void HandleChange(ChangeEventArgs e)
     {
         var value = e.Value?.ToString();
-        Console.WriteLine($"Changed to: {value}");
+        Console.WriteLine($&quot;Changed to: {value}&quot;);
     }
 }</code></pre>
 </div>
@@ -94,15 +94,15 @@
 <!-- Parsing string to int -->
 <div class="content_box">
     <h2>Parse string to int (with validation)</h2>
-    <pre><code>&lt;input @oninput="HandleIntInput" placeholder="Enter number" /&gt;
+    <pre><code>&lt;input @oninput=&quot;HandleIntInput&quot; placeholder=&quot;Enter number&quot; /&gt;
 
 @code {
-    private string inputValue = "";
+    private string inputValue = &quot;&quot;;
     private int parsedValue = 0;
 
     private void HandleIntInput(ChangeEventArgs e)
     {
-        inputValue = e.Value?.ToString() ?? "";
+        inputValue = e.Value?.ToString() ?? &quot;&quot;;
         if (int.TryParse(inputValue, out int result))
         {
             parsedValue = result;
@@ -114,12 +114,12 @@
 <!-- Click Events -->
 <div class="content_box">
     <h2>Click Events</h2>
-    <pre><code>&lt;button @onclick="SayHello"&gt;Click me&lt;/button&gt;
+    <pre><code>&lt;button @onclick=&quot;SayHello&quot;&gt;Click me&lt;/button&gt;
 
 @code {
     private void SayHello()
     {
-        Console.WriteLine("Hello from Blazor Server!");
+        Console.WriteLine(&quot;Hello from Blazor Server!&quot;);
     }
 }</code></pre>
 </div>
@@ -127,12 +127,12 @@
 <!-- Event with parameter -->
 <div class="content_box">
     <h2>Events With Parameters</h2>
-    <pre><code>&lt;button @onclick="() =&gt; GreetUser("Alice")"&gt;Greet Alice&lt;/button&gt;
+    <pre><code>&lt;button @onclick=&quot;() =&gt; GreetUser(&quot;Alice&quot;)&quot;&gt;Greet Alice&lt;/button&gt;
 
 @code {
     private void GreetUser(string name)
     {
-        Console.WriteLine($"Hello, {name}!");
+        Console.WriteLine($&quot;Hello, {name}!&quot;);
     }
 }</code></pre>
 </div>
@@ -140,7 +140,7 @@
 <!-- Filter/Search List Example -->
 <div class="content_box">
     <h2>Search and Filter a List</h2>
-    <pre><code>&lt;input @bind="SearchTerm" placeholder="Search..." /&gt;
+    <pre><code>&lt;input @bind=&quot;SearchTerm&quot; placeholder=&quot;Search...&quot; /&gt;
 
 &lt;ul&gt;
     @foreach (var item in FilteredItems)
@@ -150,15 +150,15 @@
 &lt;/ul&gt;
 
 @code {
-    private string SearchTerm = "";
+    private string SearchTerm = &quot;&quot;;
 
     private List&lt;string&gt; Items = new()
     {
-        "Blazor",
-        "C#",
-        "SignalR",
-        "WebAssembly",
-        "ASP.NET Core"
+        &quot;Blazor&quot;,
+        &quot;C#&quot;,
+        &quot;SignalR&quot;,
+        &quot;WebAssembly&quot;,
+        &quot;ASP.NET Core&quot;
     };
 
     private IEnumerable&lt;string&gt; FilteredItems =&gt;
@@ -173,7 +173,7 @@
 <div class="content_box">
     <h2>Authorization</h2>
     <pre><code>@attribute [Authorize]
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = &quot;Admin&quot;)]
 
 &lt;AuthorizeView&gt;
     &lt;Authorized&gt;
