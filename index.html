@@ -182,7 +182,55 @@ foreach (var entry in scores)
 }</code></pre>
 </div>
 
-<!-- Interfaces, Enums, Exceptions, LINQ, File IO, Recursion already included above -->
+<!-- LINQ Examples -->
+<div class="content_box" style="margin-top: 3em;">
+    <h2>LINQ Examples</h2>
+
+    <h3>Aggregate File Statistics</h3>
+    <pre><code>var files = await context.Files.ToListAsync();
+
+int fileCount = files
+    .Select(f => Path.GetFileName(f.Path))
+    .Distinct()
+    .Count();
+
+int folderCount = files
+    .Select(f => Path.GetDirectoryName(f.Path))
+    .Distinct()
+    .Count();
+
+long totalBytes = files.Sum(f => f.SizeInBytes);
+
+Console.WriteLine($"Files: {fileCount}, Folders: {folderCount}");
+Console.WriteLine($"Total Size: {FormatSize(totalBytes)}");</code></pre>
+
+    <h3>Convert File Size</h3>
+    <pre><code>public string FormatSize(long bytes)
+{
+    double unit = 1000;
+    if (bytes < unit) return $"{bytes} B";
+    if (bytes < unit * unit) return $"{bytes / unit:F2} KB";
+    if (bytes < unit * unit * unit) return $"{bytes / (unit * unit):F2} MB";
+    if (bytes < unit * unit * unit * unit) return $"{bytes / (unit * unit * unit):F2} GB";
+    return $"{bytes / (unit * unit * unit * unit):F2} TB";
+}</code></pre>
+
+    <h3>Top 10 Directories by File Size</h3>
+    <pre><code>var topDirs = files
+    .GroupBy(f => Path.GetDirectoryName(f.Path))
+    .Select(g => new
+    {
+        Directory = g.Key,
+        TotalSize = g.Sum(f => f.SizeInBytes)
+    })
+    .OrderByDescending(g => g.TotalSize)
+    .Take(10);
+
+foreach (var dir in topDirs)
+{
+    Console.WriteLine($"{FormatSize(dir.TotalSize)} - {dir.Directory}");
+}</code></pre>
+</div>
 
 <!-- Footer -->
 <footer style="margin-top: 5em; padding: 1em; text-align: center; font-size: 0.9em; color: #666;">
