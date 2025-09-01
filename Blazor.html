@@ -187,36 +187,36 @@
 
 <!-- EditForm -->
 <div class="content_box">
-    <h2>Blazor EditForm</h2>
+    <h2>Blazor EditForm with All Input Types</h2>
     <pre><code>&lt;EditForm Model=&quot;@dummyModel&quot; OnValidSubmit=&quot;@HandleSubmit&quot;&gt;
     &lt;DataAnnotationsValidator /&gt;
 
-    @* --- InputText für normale Texteingaben --- *@
+    @* --- InputText for normal text entries --- *@
     &lt;div class=&quot;mb-3&quot;&gt;
         &lt;label for=&quot;name&quot; class=&quot;form-label&quot;&gt;Name (InputText)&lt;/label&gt;
         &lt;InputText id=&quot;name&quot; @bind-Value=&quot;dummyModel.Name&quot; class=&quot;form-control&quot; /&gt;
         &lt;ValidationMessage For=&quot;() =&gt; dummyModel.Name&quot; /&gt;
     &lt;/div&gt;
 
-    @* --- InputNumber für Zahlen (int, decimal, etc.) --- *@
+    @* --- InputNumber for numbers (int, decimal, etc.) --- *@
     &lt;div class=&quot;mb-3&quot;&gt;
-        &lt;label for=&quot;amount&quot; class=&quot;form-label&quot;&gt;Anzahl (InputNumber)&lt;/label&gt;
+        &lt;label for=&quot;amount&quot; class=&quot;form-label&quot;&gt;Amount (InputNumber)&lt;/label&gt;
         &lt;InputNumber id=&quot;amount&quot; @bind-Value=&quot;dummyModel.Amount&quot; class=&quot;form-control&quot; /&gt;
         &lt;ValidationMessage For=&quot;() =&gt; dummyModel.Amount&quot; /&gt;
     &lt;/div&gt;
     
-    @* --- InputDate für Datumsauswahl --- *@
+    @* --- InputDate for date selection --- *@
     &lt;div class=&quot;mb-3&quot;&gt;
-        &lt;label for=&quot;startDate&quot; class=&quot;form-label&quot;&gt;Startdatum (InputDate)&lt;/label&gt;
+        &lt;label for=&quot;startDate&quot; class=&quot;form-label&quot;&gt;Start Date (InputDate)&lt;/label&gt;
         &lt;InputDate id=&quot;startDate&quot; @bind-Value=&quot;dummyModel.StartDate&quot; class=&quot;form-control&quot; /&gt;
         &lt;ValidationMessage For=&quot;() =&gt; dummyModel.StartDate&quot; /&gt;
     &lt;/div&gt;
 
-    @* --- InputSelect für eine Dropdown-Auswahl (hier mit einem Enum) --- *@
+    @* --- InputSelect for a dropdown selection (here with an Enum) --- *@
     &lt;div class=&quot;mb-3&quot;&gt;
-        &lt;label for=&quot;category&quot; class=&quot;form-label&quot;&gt;Kategorie (InputSelect)&lt;/label&gt;
+        &lt;label for=&quot;category&quot; class=&quot;form-label&quot;&gt;Category (InputSelect)&lt;/label&gt;
         &lt;InputSelect id=&quot;category&quot; @bind-Value=&quot;dummyModel.Category&quot; class=&quot;form-select&quot;&gt;
-            &lt;option value=&quot;&quot;&gt;Bitte wählen...&lt;/option&gt;
+            &lt;option value=&quot;&quot;&gt;Please select...&lt;/option&gt;
             @foreach (var cat in Enum.GetValues&lt;DummyCategoryEnum&gt;())
             {
                 &lt;option value=&quot;@cat&quot;&gt;@cat&lt;/option&gt;
@@ -225,23 +225,23 @@
         &lt;ValidationMessage For=&quot;() =&gt; dummyModel.Category&quot; /&gt;
     &lt;/div&gt;
 
-    @* --- InputTextArea für mehrzeilige Texteingaben --- *@
+    @* --- InputTextArea for multi-line text entries --- *@
     &lt;div class=&quot;mb-3&quot;&gt;
-        &lt;label for=&quot;description&quot; class=&quot;form-label&quot;&gt;Beschreibung (InputTextArea)&lt;/label&gt;
+        &lt;label for=&quot;description&quot; class=&quot;form-label&quot;&gt;Description (InputTextArea)&lt;/label&gt;
         &lt;InputTextArea id=&quot;description&quot; @bind-Value=&quot;dummyModel.Description&quot; class=&quot;form-control&quot; rows=&quot;3&quot; /&gt;
         &lt;ValidationMessage For=&quot;() =&gt; dummyModel.Description&quot; /&gt;
     &lt;/div&gt;
     
-    @* --- InputCheckbox für Ja/Nein-Werte --- *@
+    @* --- InputCheckbox for Yes/No values --- *@
     &lt;div class=&quot;form-check mb-3&quot;&gt;
         &lt;InputCheckbox id=&quot;isActive&quot; @bind-Value=&quot;dummyModel.IsActive&quot; class=&quot;form-check-input&quot; /&gt;
-        &lt;label for=&quot;isActive&quot; class=&quot;form-check-label&quot;&gt;Aktiv (InputCheckbox)&lt;/label&gt;
+        &lt;label for=&quot;isActive&quot; class=&quot;form-check-label&quot;&gt;Active (InputCheckbox)&lt;/label&gt;
     &lt;/div&gt;
 
     @* --- Buttons --- *@
     &lt;div class=&quot;mt-3&quot;&gt;
-        &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;Speichern&lt;/button&gt;
-        &lt;button type=&quot;button&quot; class=&quot;btn btn-secondary&quot;&gt;Abbrechen&lt;/button&gt;
+        &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;Save&lt;/button&gt;
+        &lt;button type=&quot;button&quot; class=&quot;btn btn-secondary&quot;&gt;Cancel&lt;/button&gt;
     &lt;/div&gt;
 &lt;/EditForm&gt;</code></pre>
 </div>
@@ -253,3 +253,4 @@
 
 </body>
 </html>
+
