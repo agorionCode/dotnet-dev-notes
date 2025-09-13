@@ -129,3 +129,55 @@ else
 	}
 }</code></pre>
 </div>
+
+	<div class="content_box" style="margin-top: 3em;">
+    <h2>Blazor Component – Confirmation Modal</h2>
+    <p>This shows how to create a modal dialog in Blazor. The visibility is controlled by a boolean flag, and it includes a backdrop overlay.</p>
+
+    <h3>DeleteModal.razor</h3>
+    <pre><code>@* This modal is conditionally rendered based on a boolean flag *@
+@if (isModalVisible)
+{
+    &lt;div class="modal fade show" style="display: block;" tabindex="-1" role="dialog"&gt;
+        &lt;div class="modal-dialog" role="document"&gt;
+            &lt;div class="modal-content"&gt;
+                &lt;div class="modal-header"&gt;
+                    &lt;h5 class="modal-title"&gt;@example.Title&lt;/h5&gt;
+                    &lt;button class="btn btn-close" @onclick="() => isModalVisible = false"&gt;
+                    &lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div class="modal-body"&gt;
+                    &lt;p&gt;Are you sure you want to delete this example?&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div class="modal-footer"&gt;
+                    &lt;button type="button" class="btn btn-danger" @onclick="HandleDelete"&gt;
+                        Delete
+                    &lt;/button&gt;
+                    &lt;button type="button" class="btn btn-secondary" @onclick="() => isModalVisible = false"&gt;
+                        Cancel
+                    &lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="modal-backdrop fade show"&gt;&lt;/div&gt;
+}
+
+@code {
+    private bool isModalVisible = false;
+
+    // Method to show the modal
+    private void ShowModal()
+    {
+        isModalVisible = true;
+    }
+
+    // Method to handle the delete action
+    private async Task HandleDelete()
+    {
+        // ... logic to delete the item ...
+        isModalVisible = false; // Hide modal after action
+    }
+}</code></pre>
+</div>
