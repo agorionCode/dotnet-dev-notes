@@ -1,1 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="stylesheet.css">
+    <title>C# dev-docs</title>
+</head>
+<body style="display: flex; flex-direction: column;">
 
+<!-- Navigation -->
+<div class="nav">
+    <a class="nav_element" href="index.html">C#</a>
+    <a class="nav_element" href="EntityFramework.html" style="font-weight: bold;">Entity Framework</a>
+    <a class="nav_element" href="Blazor.html">Blazor</a>
+    <a class="nav_element" href="SQL.html">SQL</a>
+    <a class="nav_element" href="Recursion.html">Recursion</a>
+    <a class="nav_element" href="ExampleComponents.html">Example Components</a>
+</div>
+
+<!-- Header -->
+<div class="content_box">
+    <h1>Example Blazor Components - dev-docs</h1>
+    <p>
+        Welcome to the Example Blazor Components docs<br>
+        More Components here:/<br>
+        <a href=" https://getbootstrap.com/docs/5.3/getting-started/introduction" target="_blank">→ Get Bootstrap Docs</a>
+    </p>
+</div>
+
+<div class="content_box" style="margin-top: 3em;">
+    <h2>Blazor Component – Example Page with User Id</h2>
+
+    <h3>ExamplePage.razor</h3>
+    <pre><code>@page "/example/page"
+
+@using Microsoft.AspNetCore.Authorization
+@using Example.Data
+@using Example.Data.Models
+@using Example.Data.Services
+
+@inject ExampleService exampleService
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider authenticationStateProvider
+
+@attribute [Authorize]
+
+&lt;div class="d-flex justify-content-between"&gt;
+	&lt;h3&gt;Example&lt;/h3&gt;
+	&lt;button class="btn btn-primary mt-1 mb-1" @onclick="HandleRedirectNew"&gt;New&lt;/button&gt;
+&lt;/div&gt;
+
+@if (errorMessage != null)
+{
+	&lt;div class="alert alert-danger"&gt;
+		@errorMessage
+	&lt;/div&gt;
+}
+
+@if (examples == null)
+{
+	&lt;p&gt;&lt;em&gt;Loading...&lt;/em&gt;&lt;/p&gt;
+}
+else if (!examples.Any())
+{
+	&lt;p&gt;&lt;em&gt;Currently no Examples...&lt;/em&gt;&lt;/p&gt;
+}
+else
+{
+	&lt;table class="table"&gt;
+		&lt;thead&gt;
+			&lt;tr&gt;
+				&lt;th&gt;example&lt;/th&gt;
+			&lt;/tr&gt;
+		&lt;/thead&gt;
+		&lt;tbody&gt;
+			@foreach (var example in examples)
+			{
+				&lt;tr&gt;
+					&lt;td @onclick="() => RedirectEdit(example.Id)"&gt;&lt;a href="#"&gt;@example.Title&lt;/a&gt;&lt;/td&gt;
+				&lt;/tr&gt;
+			}
+		&lt;/tbody&gt;
+	&lt;/table&gt;
+}
+
+@code {
+	private List&lt;Example&gt;? examples;
+	private string? userId;
+	private string? errorMessage;
+
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			await LoadDataAsync();
+		}
+		catch (Exception ex)
+		{
+			errorMessage = "A unexpected error occured!";
+		}
+	}
+
+	private async Task LoadDataAsync()
+	{
+		var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+		var user = authState.User;
+		this.userId = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+		if (userId == null)
+		{
+			errorMessage = "While loading the user data an error occured!";
+			return;
+		}
+		examples = await exampleService.GetExamplesByUserIdAsync(userId);
+		if (examples == null)
+		{
+			errorMessage = "While loading the examples an error occured!";
+			return;
+		}
+	}
+
+	private void HandleRedirectNew()
+	{
+		navigationManager.NavigateTo("example/create");
+	}
+
+	private void RedirectEdit(int exampleId)
+	{
+		navigationManager.NavigateTo($"/example/edit/{exampleId}");
+	}
+}</code></pre>
+</div>
